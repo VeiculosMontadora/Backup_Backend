@@ -1,6 +1,6 @@
 # Using the official Python image.
 # Python 3.8.0.
-FROM python:3.8-bullseye
+FROM python:3.10.11-bullseye
 
 # Arguments for the build.
 #
