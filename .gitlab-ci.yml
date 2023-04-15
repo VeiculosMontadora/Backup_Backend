@@ -118,10 +118,10 @@ build_and_publish:
     - |
       JOB_URL="$CI_PROJECT_URL/-/jobs/$CI_JOB_ID"
       if [ "$CI_JOB_STATUS" == "success" ]; then
-        TITLE=":white_check_mark: Build e Publicação (Frontend) - Sucesso!"
-        DESCRIPTION="A imagem do frontend foi construída e publicada com sucesso no repositório ECR da AGES! Veja os [logs do job]($JOB_URL) para mais detalhes."
+        TITLE=":white_check_mark: Build e Publicação (Backend) - Sucesso!"
+        DESCRIPTION="A imagem do backend foi construída e publicada com sucesso no repositório ECR da AGES! Veja os [logs do job]($JOB_URL) para mais detalhes."
       else
-        TITLE=":x: Build e Publicação (Frontend) - Erro!"
-        DESCRIPTION="Não foi possível construir e publicar a imagem do frontend no repositório ECR da AGES. Veja os [logs do job]($JOB_URL) para saber o que houve de errado."
+        TITLE=":x: Build e Publicação (Backend) - Erro!"
+        DESCRIPTION="Não foi possível construir e publicar a imagem do backend no repositório ECR da AGES. Veja os [logs do job]($JOB_URL) para saber o que houve de errado."
       fi
       curl -H "Content-Type: application/json" -X POST -d "{\"embeds\":[{\"title\":\"$TITLE\",\"description\":\"$DESCRIPTION\",\"color\":14177041}]}" $DISCORD_WEBHOOK_URL
