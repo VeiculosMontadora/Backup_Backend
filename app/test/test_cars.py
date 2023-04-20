@@ -12,8 +12,15 @@ from app.main import app
 def test_app():
     # Set the MOCK_DATABASE environment variable to True.
     # This will make the get_database() function return a mocked database.
+    # THIS ENV APPROACH IS CURRENTLY NOT WORKING...
     environ["MOCK_DATABASE"] = "true"
     yield TestClient(app)
+
+
+# Remove later.
+# Test names MUST start with "test_".
+def test_dummy(test_app: TestClient):
+    assert True
 
 
 # def test_create_car(test_app: TestClient):
