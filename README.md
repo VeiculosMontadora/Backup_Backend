@@ -26,13 +26,13 @@ Para instalar o Docker, acesse o [site oficial](https://docs.docker.com/get-dock
 
 Agora que você tem o Python e o Docker instalados, você pode começar a trabalhar no projeto:
 
--   Primeiro, clone o repositório do projeto:
+- Primeiro, clone o repositório do projeto:
 
 ```sh
 git clone https://tools.ages.pucrs.br/veiculos-via-montadora/backend.git
 ```
 
--   Em seguida, entre na pasta do projeto:
+- Em seguida, entre na pasta do projeto:
 
 ```sh
 cd backend
@@ -42,25 +42,25 @@ cd backend
 
 Para iniciar o servidor da API, siga as instruções abaixo:
 
--   Instale o gerenciador de dependências **Poetry** na versão **1.4.1**:
+- Instale o gerenciador de dependências **Poetry** na versão **1.4.1**:
 
 ```sh
 pip install "poetry==1.4.1"
 ```
 
--   Configure o Poetry para criar o ambiente virtual dentro da pasta do projeto:
+- Configure o Poetry para criar o ambiente virtual dentro da pasta do projeto:
 
 ```sh
 poetry config virtualenvs.in-project true
 ```
 
--   Agora instale as dependências do projeto:
+- Agora instale as dependências do projeto:
 
 ```sh
 poetry install
 ```
 
--   Agora você pode iniciar o servidor localmente:
+- Agora você pode iniciar o servidor localmente:
 
 ```sh
 poetry run uvicorn app.main:app --reload
@@ -72,7 +72,7 @@ O servidor estará disponível em [http://localhost:8000](http://localhost:8000/
 
 Você fará uso do Docker para executar o banco de dados MongoDB dentro de um container. Para isso, siga as instruções abaixo:
 
--   Execute o comando abaixo para iniciar o container do MongoDB:
+- Execute o comando abaixo para iniciar o container do MongoDB:
 
 ```sh
 docker compose up mongodb
