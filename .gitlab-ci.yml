@@ -19,6 +19,11 @@ variables:
   # This is the prefix that will be used to tag the application image.
   IMAGE_PREFIX: backend
 
+  # Set the environment variables for the application.
+  # DB_ENVIRONMENT is set to test to run the tests in the pipeline.
+  DB_ENVIRONMENT: test
+
+
 # Stages.
 # The stages are used to organize the jobs.
 # They run in the order they are defined.
@@ -52,6 +57,12 @@ test:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
       when: on_success
   after_script:
+    # If not running on a Merge Request, exit the job.
+    - |
+      if [ -z "$CI_MERGE_REQUEST_ID" ]; then
+        echo "The job is not running on a Merge Request. Skipping..."
+        exit 0
+      fi
     # Download curl.
     - echo "[Downloading curl]"
     - apt update && apt install -y curl
@@ -62,10 +73,6 @@ test:
     - |
       NEW_LINE=$'\n'
       JOB_URL="$CI_PROJECT_URL/-/jobs/$CI_JOB_ID"
-      if [ -z "$CI_MERGE_REQUEST_ID" ]; then
-        echo "The job is not running on a Merge Request. Skipping..."
-        exit 0
-      fi
       if [ "$CI_JOB_STATUS" == "success" ]; then
         BOT_MESSAGE="### :heavy_check_mark: Os Testes Passaram!${NEW_LINE}E tu não fez mais que a tua obrigação, $CI_COMMIT_AUTHOR... Veja os [logs do job]($JOB_URL) para mais detalhes. O Merge Request agora está liberado para ser mergeado em \`$CI_MERGE_REQUEST_TARGET_BRANCH_NAME\`."
       else

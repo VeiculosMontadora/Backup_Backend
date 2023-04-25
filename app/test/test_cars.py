@@ -1,8 +1,8 @@
 import pytest
-from os import environ
 from fastapi.testclient import TestClient
-from app.api.models.veiculo import Veiculo
+from fastapi import status
 from app.main import app
+from app.test.mockers.veiculo_mocker import mock_veiculo_with_default_params
 
 
 # This fixture will be executed before each test.
@@ -10,28 +10,47 @@ from app.main import app
 # The test function will be able to send requests to the application.
 @pytest.fixture(scope="module")
 def test_app():
-    # Set the MOCK_DATABASE environment variable to True.
-    # This will make the get_database() function return a mocked database.
-    # THIS ENV APPROACH IS CURRENTLY NOT WORKING...
-    environ["MOCK_DATABASE"] = "true"
-    yield TestClient(app)
+    yield TestClient(app=app)
 
 
-# Remove later.
-# Test names MUST start with "test_".
-def test_dummy(test_app: TestClient):
-    assert True
+# Veiculo Mock data.
+veiculo_data = mock_veiculo_with_default_params()
 
 
-# def test_create_car(test_app: TestClient):
-#     # Send a POST request to the /cars endpoint.
-#     # The request body represents a car object.
-#     veiculo_data = Veiculo(
-#         id="1",
-#         name="Fiat Uno",
-#         description="Small and cheap car."
-#     )
-#     response = test_app.post("/veiculos", json=veiculo_data.dict())
-#     # Assert that the response status code is 200, for example.
-#     assert response.status_code == 200
-#     # Assert more things as needed...
+# Test cases.
+def test_create_car(test_app: TestClient):
+    response = test_app.post("/veiculos", json=veiculo_data.dict())
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_get_all_veiculos(test_app: TestClient):
+    response = test_app.get("/veiculos")
+    assert response.status_code == status.HTTP_200_OK
+    assert len(response.json()) > 0
+
+
+def test_get_veiculo_by_sigla(test_app: TestClient):
+    sigla = veiculo_data.sigla
+    response = test_app.get(f"/veiculos/{sigla}")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["sigla"] == sigla
+
+
+def test_update_veiculo_by_sigla(test_app: TestClient):
+    veiculo_data.ano = "2023"
+    sigla = veiculo_data.sigla
+    response = test_app.put(f"/veiculos/{sigla}", json=veiculo_data.dict())
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_delete_veiculo_by_sigla(test_app: TestClient):
+    sigla = veiculo_data.sigla
+    response = test_app.delete(f"/veiculos/{sigla}")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json() == sigla
+
+
+def test_get_veiculo_by_sigla_not_found(test_app: TestClient):
+    sigla = veiculo_data.sigla
+    response = test_app.get(f"/veiculos/{sigla}")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
