@@ -23,7 +23,6 @@ variables:
   # DB_ENVIRONMENT is set to test to run the tests in the pipeline.
   DB_ENVIRONMENT: test
 
-
 # Stages.
 # The stages are used to organize the jobs.
 # They run in the order they are defined.
@@ -42,6 +41,9 @@ test:
   stage: test
   image: python:3.10.11-bullseye
   script:
+    # Install Java 11 (Needed to use Tabula-Py).
+    - echo "[Installing Java 11 to use Tabula-Py]"
+    - apt update && apt install -y openjdk-11-jre openjdk-11-jdk
     # Install Dependencies.
     - echo "[Installing Poetry]"
     - pip install "poetry==1.4.1"

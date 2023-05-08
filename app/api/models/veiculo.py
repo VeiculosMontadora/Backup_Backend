@@ -33,4 +33,6 @@ class Veiculo(BaseModel):
     num_portas: str = ""
     num_renavam: str = ""
     status: str = "PENDENTE"
+    producao: str = ""
+    desc_vendas: str = ""
     pdf_names: List[str] = []

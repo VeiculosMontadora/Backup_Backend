@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, Form, UploadFile
 from app.api.models.veiculo import Veiculo
 from app.database.mongo import get_database
 from app.api.repositories.veiculo_repository import VeiculoRepository
@@ -7,7 +7,8 @@ from app.api.services.veiculo_service import VeiculoService
 # Car router.
 #
 # Here we define the routes for the car resource.
-# We call the CarController to handle the requests.
+# This router also acts as the controller for the car resource.
+# It receives the requests, calls the service and returns the response.
 
 # These variables start with an underscore to indicate that they are 'private'.
 # They are not meant to be used outside of this file.
@@ -16,6 +17,8 @@ _repository = VeiculoRepository(_database)
 _veiculo_service = VeiculoService(_repository)
 _veiculo_router = APIRouter(prefix="/veiculos")
 
+
+## Routes - START ##
 
 @_veiculo_router.get("/")
 def get_veiculos() -> list[Veiculo]:
@@ -42,17 +45,14 @@ def delete_veiculo(sigla: str) -> str:
     return _veiculo_service.delete(sigla)
 
 
-# It contains a single endpoint that receives the PDF file.
 @_veiculo_router.post("/upload/pdf")
-def create_upload_file(form_data: UploadFile = File(...)):
-    contents = form_data.file.read()  # This function reads the pdf bytes.
-    # Here we have the pdf bytes saved in the application memory.
-    # The ideia is to call a funtion which will handle the pdf bytes and extract them.
+def create_veiculo_by_pdf(file: UploadFile = File(...), montadora: str = Form(...)):
+    pdf_bytes = file.file.read()
+    file_name = file.filename
+    return _veiculo_service.create_by_pdf(file_name, pdf_bytes, montadora)
 
-    # This is the file name in memory. It will be used to save the veiculo JSON in the database.
-    name = form_data.filename
 
-    return {"filename": name}
+## Routes - END ##
 
 
 # This function is used to get the car router.
