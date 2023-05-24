@@ -2,7 +2,8 @@ import pytest
 from fastapi.testclient import TestClient
 from fastapi import status
 from app.main import app
-from app.test.mockers.veiculo_mocker import mock_veiculo_with_default_params
+from app.test.mockers.pdf_mocker import build_pdf_with_default_params
+from app.api.models.pdf import Status
 
 
 # This fixture will be executed before each test.
@@ -13,44 +14,44 @@ def test_app():
     yield TestClient(app=app)
 
 
-# Veiculo Mock data.
-veiculo_data = mock_veiculo_with_default_params()
+# PDF Mock data.
+pdf_data = build_pdf_with_default_params()
 
 
 # Test cases.
-def test_create_car(test_app: TestClient):
-    response = test_app.post("/veiculos", json=veiculo_data.dict())
+def test_create_pdf(test_app: TestClient):
+    response = test_app.post("/pdfs", json=pdf_data.dict())
     assert response.status_code == status.HTTP_200_OK
 
 
-def test_get_all_veiculos(test_app: TestClient):
-    response = test_app.get("/veiculos")
+def test_get_all_pdfs(test_app: TestClient):
+    response = test_app.get("/pdfs")
     assert response.status_code == status.HTTP_200_OK
     assert len(response.json()) > 0
 
 
-def test_get_veiculo_by_sigla(test_app: TestClient):
-    sigla = veiculo_data.sigla
-    response = test_app.get(f"/veiculos/{sigla}")
+def test_get_pdf_by_nome(test_app: TestClient):
+    nome = pdf_data.nome
+    response = test_app.get(f"/pdfs/{nome}")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()["sigla"] == sigla
+    assert response.json()["nome"] == nome
 
 
-def test_update_veiculo_by_sigla(test_app: TestClient):
-    veiculo_data.ano = "2023"
-    sigla = veiculo_data.sigla
-    response = test_app.put(f"/veiculos/{sigla}", json=veiculo_data.dict())
+def test_update_pdf_by_nome(test_app: TestClient):
+    pdf_data.status = Status.CONCLUIDO
+    nome = pdf_data.nome
+    response = test_app.put(f"/pdfs/{nome}", json=pdf_data.dict())
     assert response.status_code == status.HTTP_200_OK
 
 
-def test_delete_veiculo_by_sigla(test_app: TestClient):
-    sigla = veiculo_data.sigla
-    response = test_app.delete(f"/veiculos/{sigla}")
+def test_delete_pdf_by_nome(test_app: TestClient):
+    nome = pdf_data.nome
+    response = test_app.delete(f"/pdfs/{nome}")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == sigla
+    assert response.json() == nome
 
 
-def test_get_veiculo_by_sigla_not_found(test_app: TestClient):
-    sigla = veiculo_data.sigla
-    response = test_app.get(f"/veiculos/{sigla}")
+def test_get_pdf_by_nome_not_found(test_app: TestClient):
+    nome = pdf_data.nome
+    response = test_app.get(f"/pdfs/{nome}")
     assert response.status_code == status.HTTP_404_NOT_FOUND
