@@ -4,23 +4,11 @@ from mongomock import MongoClient as MockMongoClient
 from app.config import settings
 
 
-# The variable MONGODB_HOST is set dynamically.
-#
-# If the MONGODB_HOST environment variable is set, it will be used.
-# Otherwise, the default value will be used.
-#
-# The idea is that inside the Docker container, the environment variable
-# will exist and will be used, while outside the container, the default
-# value will be used.
-#
-# Define the environment variable in Dockerfile / docker-compose.yml
-
-
 # This function returns the database.
 # With the database object we can access collections.
 # We can also create/delete new collections.
 #
-# If the MOCK_DATABASE environment variable is set to True,
+# Depending on the value of settings.DB_ENVIRONMENT variable,
 # a mocked database will be returned instead of the real database.
 def get_database() -> Database:
     if str.lower(settings.DB_ENVIRONMENT) == "test":
