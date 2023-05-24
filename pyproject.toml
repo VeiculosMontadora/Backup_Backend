@@ -16,6 +16,7 @@ tabula-py = "2.7.0"
 httpx = "0.23.3"
 python-multipart = "0.0.6"
 fuzzywuzzy = "0.18.0"
+pdfplumber = "0.9.0"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.2"

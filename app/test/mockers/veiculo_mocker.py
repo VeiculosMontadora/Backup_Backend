@@ -5,9 +5,10 @@ from app.api.models.veiculo import Combustivel, Motor, Veiculo
 def mock_veiculo_with_default_params() -> Veiculo:
     return Veiculo(
         desc_cat="desc",
-        renavam_desc="renavam",
+        desc_renavam="renavam",
         sigla="1234Test",
         pacote_def_modelo="pacote",
+        preco="preco",
         versao="versao",
         ano="ano",
         marca="marca",
@@ -22,6 +23,5 @@ def mock_veiculo_with_default_params() -> Veiculo:
         num_passag="num_passag",
         num_portas="num_portas",
         num_renavam="num_renavam",
-        status="status",
         pdf_names=["pdf_names"]
     )
