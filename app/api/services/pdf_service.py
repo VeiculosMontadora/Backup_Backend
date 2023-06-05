@@ -24,17 +24,26 @@ class PDFService:
     def get_by_nome(self, nome: str) -> PDF:
         try:
             return self._repository.get_by_nome(nome)
-        except Exception as error:
+        except Exception:
             raise HTTPException(
-                status_code=404, detail=error.args[0])
+                status_code=404, detail="PDF não encontrado.")
 
     def create(self, pdf_data: PDF) -> PDF:
-        # Set date attributes.
-        created_date = current_date()
-        pdf_data.criado = created_date
-        pdf_data.ultimo_visto = created_date
-        result = self._repository.create(pdf_data)
-        return self._repository.find_by_id(result.inserted_id)
+        try:
+            # get_by_nome raises a 404 error if the car is not found.
+            self.get_by_nome(pdf_data.nome)
+            # If we got here, that means the pdf already exists in the database.
+            raise ValueError(f"PDF já existente por nome: {pdf_data.nome}.")
+        except HTTPException as e:
+            if e.status_code == 404:
+                created_date = current_date()
+                pdf_data.criado = created_date
+                pdf_data.ultimo_visto = created_date
+                result = self._repository.create(pdf_data)
+                return self._repository.find_by_id(result.inserted_id)
+        except ValueError as e:
+            raise HTTPException(
+                status_code=400, detail=e.args[0])
 
     def update(self, nome: str, pdf_data: PDF) -> PDF:
         pdf_data.ultimo_visto = current_date()
