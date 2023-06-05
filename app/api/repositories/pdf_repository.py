@@ -20,20 +20,9 @@ class PDFRepository:
         return pdfs
 
     def get_by_nome(self, nome: str) -> PDF:
-        # This method returns the latest pdf with the given nome.
-        # It uses the 'criado' field to determine which pdf is the latest.
-        all_pdfs = self.get_all()
-        latest_pdf = None
-        for pdf in all_pdfs:
-            if pdf.nome == nome:
-                if latest_pdf is None:
-                    latest_pdf = pdf
-                else:
-                    if is_date_after(pdf.criado, latest_pdf.criado):
-                        latest_pdf = pdf
-        if latest_pdf is None:
-            raise Exception(f"PDF com nome {nome} não encontrado.")
-        return latest_pdf
+        # This method returns pdf with the given nome.
+        pdf_dict = self._collection.find_one({"nome": nome})
+        return PDF.parse_obj(pdf_dict)
 
     def create(self, pdf_data: PDF) -> InsertOneResult:
         # On create we need to convert car_data to dict and then insert it into the database.
