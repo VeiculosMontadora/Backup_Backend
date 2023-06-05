@@ -66,16 +66,22 @@ class PDFService:
     # This function will create a Veiculo object using the data read from a PDF file.
     # It redirects the call to the correct function based on the 'montadora' parameter.
     def create_by_pdf(self, file_name: str, pdf_bytes: bytes, montadora: str) -> PDF:
+        pdf = None
         if str.lower(montadora) == CHEVROLET_MONTADORA:
-            return self._create_by_pdf_chevrolet(file_name, pdf_bytes)
+            pdf = self._create_by_pdf_chevrolet(file_name, pdf_bytes)
         elif str.lower(montadora) == JEEP_MONTADORA:
-            return self._create_by_pdf_jeep(file_name, pdf_bytes)
+            pdf = self._create_by_pdf_jeep(file_name, pdf_bytes)
         else:
             raise HTTPException(
                 status_code=400, detail="Montadora inválida.")
+        if pdf.veiculos == []:
+            raise HTTPException(
+                status_code=400, detail="Nenhum veículo encontrado no PDF.")
+        return pdf
 
     # This function will create a Veiculo object using the data read from a PDF file.
     # It is specific for Chevrolet PDFs.
+
     def _create_by_pdf_chevrolet(self, file_name: str, pdf_bytes: bytes) -> PDF:
         # BytesIO is used to read the PDF bytes.
         bytes_io = BytesIO(pdf_bytes)
