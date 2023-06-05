@@ -91,3 +91,9 @@ Para executar os testes unitários da aplicação, execute o seguinte comando na
 ```sh
 poetry run pytest
 ```
+
+Para executar os testes da aplicação com cobertura de código, execute o seguinte comando na raiz do projeto:
+
+```sh
+poetry run pytest --cov=app
+```

@@ -41,7 +41,6 @@ class PDFRepository:
         return self._collection.insert_one(pdf_data.dict())
 
     def update(self, nome: str, pdf_data: PDF) -> UpdateResult:
-        print(pdf_data)
         return self._collection.update_one({"nome": nome}, {"$set": pdf_data.dict()})
     
     def update_veiculo(self, nome_pdf: str, sigla_veiculo: str, veiculo_data: Veiculo) -> UpdateResult:
