@@ -16,7 +16,7 @@ def is_similar(str1, str2, ratio: int = 75):
 
 # Constants.
 #
-# Field names of the first and only table of the PDF file.
+# Vehicle fields.
 SIGLA = 'sigla'
 ANO = 'ano'
 DESC_CAT = 'desc_cat'
@@ -28,6 +28,8 @@ POTENCIA = 'potencia'
 PRECO = 'preco'
 PAGINA = 'pagina'
 MOTOR = 'motor'
+NUM_PASSAG = 'num_passag'
+
 # Column names of the first and only table of the PDF file.
 COLUMN_NAMES = [SIGLA, ANO, DESC_CAT, COMBUSTIVEL, PRECO, PAGINA]
 #
@@ -39,11 +41,11 @@ TABLE_FOOTER_STRING_MATCH = "Tabela temporária e provisória, sujeita a modific
 POSSIBLE_FUEL_TYPES = ['flex', 'diesel', 'gasolina']
 #
 # Regex constants.
-#
-# Regex to match the 'potência' information.
-POTENCIA_REGEX = r'Potência máxima \(cv\) : ([0-9]+)'
-MOTOR_REGEX = r'\.Motor (.* \b(Diesel|Flex|Gasolina)\b)'
-MOTOR_REGEX_2 = r'\*Motor (.* \b(Diesel|Flex|Gasolina)\b)'
+REGEX_MAP = {
+    POTENCIA: r'Potência máxima \(cv\) : ([0-9]+)',
+    MOTOR: r'(?:\*|\.)Motor (.* \b(Diesel|Flex|Gasolina)\b)',
+    NUM_PASSAG: r'Capacidade de Passageiro : ([0-9]+)',
+}
 
 
 # JeepPDFReader class that reads a PDF file and extracts the data from it.
@@ -215,23 +217,17 @@ class JeepPDFReader:
                     # If the line is not equal to the pdf footer...
                     # We are still reading the car.
                     #
-                    # Check if it is the line with the 'potência' information.
-                    if str.lower(line).startswith('modelo:'):
-                        result = search(POTENCIA_REGEX, line)
-                        potencia = result.group(1)
-                        self._cars[current_car][POTENCIA] = potencia
-                    else:
-                        # Check if it is the line with the 'motor' information.
-                        result = search(MOTOR_REGEX, line)
+                    # Check for regex matches.
+                    for key in REGEX_MAP:
+                        regex = REGEX_MAP[key]
+                        result = search(regex, line)
                         if result is not None:
-                            motor = result.group(1)
-                            self._cars[current_car][MOTOR] = motor
-                        else:
-                            # Another possible pattern for the 'motor' information.
-                            result = search(MOTOR_REGEX_2, line)
-                            if result is not None:
-                                motor = result.group(1).strip()
-                                self._cars[current_car][MOTOR] = motor
+                            try:
+                                self._cars[current_car][key] = result.group(
+                                    1).strip()
+                                continue
+                            except IndexError:
+                                pass
 
     # Method that returns the cars extracted from the PDF file.
     # It returns a copy of the dictionary, so that the original dictionary is not modified.

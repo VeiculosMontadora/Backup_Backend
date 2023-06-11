@@ -144,7 +144,8 @@ class PDFService:
                 desc_cat=Copiavel(valor=desc_cat),
                 num_renavam=Copiavel(valor=num_renavam),
                 producao=Copiavel(valor=producao),
-                desc_vendas=Copiavel(valor=desc_vendas)
+                desc_vendas=Copiavel(valor=desc_vendas),
+                marca=Copiavel(valor="Chevrolet"),
             )
             vehicles.append(vehicle)
 
@@ -187,6 +188,7 @@ class PDFService:
             potencia = vehicle_dict["potencia"]
             combustivel = vehicle_dict["combustivel"]
             preco = vehicle_dict["preco"]
+            num_passag = vehicle_dict["num_passag"]
 
             # Creating the Veiculo object.
             vehicle = Veiculo(
@@ -205,7 +207,8 @@ class PDFService:
                             potencia=Copiavel(valor=potencia)
                         )
                     ],
-                )
+                ),
+                num_passag=Copiavel(valor=num_passag),
             )
 
             # Appending the Veiculo object to the list.
