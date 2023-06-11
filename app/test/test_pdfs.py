@@ -4,6 +4,7 @@ from fastapi import status
 from app.main import app
 from app.test.mockers.pdf_mocker import build_pdf_with_default_params, build_update_veihcle
 from app.api.models.pdf import Status
+from copy import deepcopy
 
 
 # This fixture will be executed before each test.
@@ -147,7 +148,23 @@ def test_delete_pdf_by_nome(test_app: TestClient):
     nome = pdf_data.nome
     response = test_app.delete(f"/pdfs/{nome}")
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == nome
+    assert response.json()[0] == nome
+
+
+# Test delete many PDFs by nome.
+def test_delete_many_pdfs_by_nome(test_app: TestClient):
+    # Creating dummy PDFS to delete.
+    test_app.post("/pdfs", json=pdf_data.dict())
+    pdf_data_2 = deepcopy(pdf_data)
+    pdf_data_2.nome = "Test_name.pdf"
+    test_app.post("/pdfs", json=pdf_data_2.dict())
+    # Using ';' to separate the names.
+    nomes = f"{pdf_data.nome};{pdf_data_2.nome}"
+    response = test_app.delete(f"/pdfs/{nomes}")
+    as_list = response.json()
+    assert response.status_code == status.HTTP_200_OK
+    assert as_list[0] == pdf_data.nome
+    assert as_list[1] == pdf_data_2.nome
 
 
 # Test get a pdf by nome not found.

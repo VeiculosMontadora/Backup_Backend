@@ -3,7 +3,6 @@ from bson import ObjectId
 from pymongo.database import Database
 from pymongo.results import UpdateResult, DeleteResult, InsertOneResult
 from app.api.models.pdf import PDF, Status
-from app.utils.utils import is_date_after
 
 PDF_COLLECTION = "pdfs"
 
@@ -31,15 +30,16 @@ class PDFRepository:
 
     def update(self, nome: str, pdf_data: PDF) -> UpdateResult:
         return self._collection.update_one({"nome": nome}, {"$set": pdf_data.dict()})
-    
+
     def update_veiculo(self, nome_pdf: str, sigla_veiculo: str, veiculo_data: Veiculo) -> UpdateResult:
-        return self._collection.update_one({"nome": nome_pdf, "veiculos": {"$elemMatch":{"sigla.valor": sigla_veiculo}}}, {"$set": {"veiculos.$": veiculo_data.dict()}})
-    
+        return self._collection.update_one({"nome": nome_pdf, "veiculos": {"$elemMatch": {"sigla.valor": sigla_veiculo}}}, {"$set": {"veiculos.$": veiculo_data.dict()}})
+
     def update_pdf_status(self, nome_pdf: str, status: Status) -> UpdateResult:
         return self._collection.update_one({"nome": nome_pdf}, {"$set": {"status": status}})
 
-    def delete(self, nome: str) -> DeleteResult:
-        return self._collection.delete_one({"nome": nome})
+    def delete_many(self, lista_nomes: list[str]) -> DeleteResult:
+        filter = {'nome': {'$in': lista_nomes}}
+        return self._collection.delete_many(filter)
 
     def find_by_id(self, pdf_id: ObjectId):
         pdf_dict = self._collection.find_one({"_id": pdf_id})
