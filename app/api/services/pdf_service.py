@@ -36,6 +36,9 @@ class PDFService:
             raise ValueError(f"PDF já existente por nome: {pdf_data.nome}.")
         except HTTPException as e:
             if e.status_code == 404:
+                # The name cannot contain semicolons because they are used
+                # to separate the names in the delete_many endpoint.
+                pdf_data.nome = pdf_data.nome.replace(";", "_")
                 created_date = current_date()
                 pdf_data.criado = created_date
                 pdf_data.ultimo_visto = created_date
@@ -65,12 +68,13 @@ class PDFService:
             raise HTTPException(
                 status_code=400, detail="Nenhum dado encontrado ou modificado.")
 
-    def delete(self, nome: str) -> str:
-        result = self._repository.delete(nome)
+    def delete_many(self, nomes: str) -> List[str]:
+        lista_nomes = nomes.split(";")
+        result = self._repository.delete_many(lista_nomes)
         if result.deleted_count == 0:
             raise HTTPException(
-                status_code=400, detail="Dado não encontrado para deletar.")
-        return nome
+                status_code=400, detail="Dados não encontrados para deletar.")
+        return lista_nomes
 
     # This function will create a Veiculo object using the data read from a PDF file.
     # It redirects the call to the correct function based on the 'montadora' parameter.

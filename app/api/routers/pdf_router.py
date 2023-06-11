@@ -42,21 +42,19 @@ def update_pdf(nome: str, pdf_data: PDF) -> PDF:
     return _pdf_service.update(nome, pdf_data)
 
 
-
 @_pdf_router.patch("/{nome}/{sigla}")
 def update_pdf_veiculo(nome: str, sigla: str, veiculo_data: Veiculo) -> None:
     return _pdf_service.update_veiculo(nome, sigla, veiculo_data)
 
 
-#Done
 @_pdf_router.patch("/{nome}")
 def update_pdf_status(nome: str, status: Status) -> None:
     return _pdf_service.update_pdf_status(nome, status)
 
 
-@_pdf_router.delete("/{nome}")
-def delete_pdf(nome: str) -> str:
-    return _pdf_service.delete(nome)
+@_pdf_router.delete("/{nomes}")
+def delete_pdf(nomes: str) -> List[str]:
+    return _pdf_service.delete_many(nomes)
 
 
 @_pdf_router.post("/upload")
