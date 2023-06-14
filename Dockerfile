@@ -38,8 +38,11 @@ RUN poetry config virtualenvs.create false \
 # Copy the rest of the project.
 COPY . /app/
 
+# Copy SSL certificates.
+COPY ./certs /etc/ssl
+
 # Expose the port.
-EXPOSE 8000
+EXPOSE 443
 
 # Run the application.
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "443", "--ssl-certfile", "/etc/ssl/certificate.crt", "--ssl-keyfile", "/etc/ssl/private.key"]
