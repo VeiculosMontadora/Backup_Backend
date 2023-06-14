@@ -6,7 +6,11 @@ class Settings(BaseSettings):
     # Api configs.
     API_TITLE = "VEICULOS_VIA_MONTADORA"
     API_HOST = "0.0.0.0"
-    API_PORT = 8000
+    API_PORT = 443
+
+    # SSL configs.
+    SSL_CERT_FILE = "/etc/ssl/certificate.crt"
+    SSL_KEY_FILE = "/etc/ssl/private.key"
 
     # DB configs.
     #
