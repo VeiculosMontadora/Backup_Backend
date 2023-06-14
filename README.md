@@ -76,8 +76,6 @@ Quando você for fazer o deploy do projeto, você não irá executar o servidor 
 
 A ideia de colocar o backend sob HTTPS na porta 8080 é liberar a porta padrão `443` para o frontend, que também será executado em um container Docker e também sob HTTPS.
 
-Para
-
 ### Banco de Dados - MongoDB
 
 Você fará uso do Docker para executar o banco de dados MongoDB dentro de um container. Para isso, siga as instruções abaixo:
