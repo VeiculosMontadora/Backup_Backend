@@ -1,6 +1,6 @@
-from datetime import date
 from io import BytesIO
 from app.api.models.veiculo import Copiavel, Veiculo, Motor, Combustivel
+from app.api.mappers.veiculos_mapper import VeiculoMapper
 from app.pdf.chevrolet.ChevroletPDFReader import ChevroletPDFReader
 from app.pdf.jeep.JeepPDFReader import JeepPDFReader
 from fastapi import HTTPException
@@ -8,6 +8,8 @@ from typing import List
 from app.api.models.pdf import PDF, Status
 from app.api.repositories.pdf_repository import PDFRepository
 from app.utils.utils import current_date
+from csv import DictWriter
+from io import StringIO
 
 
 CHEVROLET_MONTADORA = "chevrolet"
@@ -27,6 +29,27 @@ class PDFService:
         except Exception:
             raise HTTPException(
                 status_code=404, detail="PDF não encontrado.")
+
+    def get_pdf_as_csv(self, nome: str):
+        pdf = self.get_by_nome(nome)
+        if len(pdf.veiculos) == 0:
+            raise HTTPException(
+                status_code=404, detail="Nenhum veículo presente no PDF.")
+        field_names = pdf.veiculos[0].dict().keys()
+        veiculo_data = VeiculoMapper.map_array(pdf.veiculos)
+        csv_string = StringIO()
+        # Delimiter is set to ';' because of the csv format used in Brazil.
+        # Also to avoid problems with the decimal separator.
+        writer = DictWriter(csv_string, field_names, delimiter=';')
+        writer.writeheader()
+        for veiculo in veiculo_data:
+            veiculo_dict = veiculo.dict()
+            for key in veiculo_dict:
+                field = veiculo_dict[key]
+                if type(field) is str and ";" in field:
+                    veiculo_dict[key] = field.replace(";", "-")
+            writer.writerow(veiculo.dict())
+        return csv_string.getvalue()
 
     def create(self, pdf_data: PDF) -> PDF:
         try:

@@ -31,6 +31,9 @@ def get_pdfs() -> List[PDF]:
 def get_pdf(nome: str) -> PDF:
     return _pdf_service.get_by_nome(nome)
 
+@_pdf_router.get("/csv/{nome}")
+def get_pdf_as_csv(nome: str) -> str:
+    return _pdf_service.get_pdf_as_csv(nome)
 
 @_pdf_router.post("/")
 def create_pdf(pdf_data: PDF) -> PDF:
