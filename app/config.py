@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     API_PORT = 443
 
     # SSL configs.
+    # If running locally, point to your certificate and private key files.
     SSL_CERT_FILE = "/etc/ssl/certificate.crt"
     SSL_KEY_FILE = "/etc/ssl/private.key"
 

@@ -66,7 +66,9 @@ poetry install
 poetry run uvicorn app.main:app --reload
 ```
 
-O servidor estará disponível em [http://localhost:8000](http://localhost:8000/).
+O servidor estará disponível em [https://localhost](https://localhost).
+
+> Para que o HTTPS funcione, você deve colocar um certificado e uma chave privada válida dentro do diretório `certs`. Leia o arquivo `certs/README.md` para mais informações.
 
 ### Banco de Dados - MongoDB
 
