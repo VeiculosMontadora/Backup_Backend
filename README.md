@@ -70,6 +70,14 @@ O servidor estará disponível em [https://localhost](https://localhost).
 
 > Para que o HTTPS funcione, você deve colocar um certificado e uma chave privada válida dentro do diretório `certs`. Leia o arquivo `certs/README.md` para mais informações.
 
+### Servidor API - Docker
+
+Quando você for fazer o deploy do projeto, você não irá executar o servidor localmente, mas sim em um container Docker. Nesse caso, o endpoint da API na máquina host será [https://localhost:8080](http://localhost:8080).
+
+A ideia de colocar o backend sob HTTPS na porta 8080 é liberar a porta padrão `443` para o frontend, que também será executado em um container Docker e também sob HTTPS.
+
+Para
+
 ### Banco de Dados - MongoDB
 
 Você fará uso do Docker para executar o banco de dados MongoDB dentro de um container. Para isso, siga as instruções abaixo:
