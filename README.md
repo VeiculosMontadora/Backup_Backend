@@ -1,5 +1,18 @@
 # Backend
 
+![Static Badge](https://img.shields.io/badge/Linguagem%3A--gray)
+![Static Badge](https://img.shields.io/badge/Python-blue?logo=python&color=black)
+
+![Static Badge](https://img.shields.io/badge/Framework-FastAPI-lightblue)
+![Static Badge](https://img.shields.io/badge/Arquitetura-REST-green)
+![Static Badge](https://img.shields.io/badge/Testes-PyTest-orange)
+
+![Static Badge](https://img.shields.io/badge/Tecnologia_de_Conteineriza%C3%A7%C3%A3o%3A-gray)
+![Static Badge](https://img.shields.io/badge/Docker-black?logo=docker)
+![Static Badge](https://img.shields.io/badge/Banco%20de%20dados-N%C3%A3o_Relacional-red)
+![Static Badge](https://img.shields.io/badge/Tecnologia%3A-gray)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?&logo=mongodb&logoColor=white)
+
 Repositório do backend do projeto Veículos Via Montadora. O backend é desenvolvido em **Python** com o framework **FastAPI**. O banco de dados utilizado é o **MongoDB**. O projeto utiliza o **Poetry** para gerenciamento de dependências e **Pytest** para testes unitários. Além disso, o código deste repositório é executado em cima de uma função **AWS Lambda**.
 
 ## Requisitos
