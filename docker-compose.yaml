@@ -24,9 +24,11 @@ services:
       - ENVIRONMENT=production
     container_name: veiculos-via-montadora-api
     environment:
-      - MONGODB_HOST=<SECRET>
+      - MONGODB_HOST=mongodb://mongo_user:mongo_password@host.docker.internal:27017
     ports:
-      - "8000:8000"
+      - "8080:443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - mongodb
 
